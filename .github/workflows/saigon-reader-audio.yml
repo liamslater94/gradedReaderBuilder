@@ -1,0 +1,85 @@
+name: Generate Southern audio (Saigon Reader)
+
+# Run by hand from the Actions tab. Generates Southern Vietnamese audio with
+# FPT.AI (voice "lannhi") and opens a pull request with the clips, so they can
+# be listened to before merging. Needs the repository secret FPT_API_KEY.
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "How many clips to generate (blank = all missing). Start with 20 to hear a sample."
+        required: false
+        default: "20"
+      voice:
+        description: "FPT.AI voice (lannhi = Southern female)"
+        required: false
+        default: "lannhi"
+      speed:
+        description: "Speed from -3 (slowest) to 3 (fastest)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: saigon-reader-audio
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Check inputs and API key
+        env:
+          FPT_API_KEY: ${{ secrets.FPT_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
+          VOICE: ${{ inputs.voice }}
+          SPEED: ${{ inputs.speed }}
+        run: |
+          if [ -z "$FPT_API_KEY" ]; then
+            echo "::error::Add your FPT.AI key as a repository secret named FPT_API_KEY (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          [[ -z "$LIMIT" || "$LIMIT" =~ ^[0-9]+$ ]] || { echo "::error::limit must be a number"; exit 1; }
+          [[ "$VOICE" =~ ^[a-z]+$ ]] || { echo "::error::voice must be a voice id like lannhi"; exit 1; }
+          [[ "$SPEED" =~ ^-?[0-3]$ ]] || { echo "::error::speed must be between -3 and 3"; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate audio
+        working-directory: saigon-reader
+        env:
+          FPT_API_KEY: ${{ secrets.FPT_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
+          VOICE: ${{ inputs.voice }}
+          SPEED: ${{ inputs.speed }}
+        run: |
+          args=(--voice="$VOICE" --speed="$SPEED")
+          [ -n "$LIMIT" ] && args+=(--limit="$LIMIT")
+          node tools/generate-audio.js "${args[@]}"
+
+      # Open the PR even if a few clips failed, so the good ones aren't lost;
+      # re-running the workflow later fills in anything missing.
+      - name: Open a pull request with the audio
+        if: ${{ !cancelled() }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: saigon-reader/southern-audio
+          add-paths: saigon-reader/audio
+          commit-message: "Add Southern Vietnamese audio (FPT.AI ${{ inputs.voice }})"
+          title: "Saigon Reader: Southern audio (FPT.AI ${{ inputs.voice }})"
+          body: |
+            Southern Vietnamese audio generated with FPT.AI voice `${{ inputs.voice }}` (speed ${{ inputs.speed }}, limit: ${{ inputs.limit || 'all' }}).
+
+            **Before merging, listen to a few clips:** open *Files changed* and play some of the `.mp3` files, or check out this branch and run the app locally (`cd saigon-reader && python3 -m http.server 8000`). Tapped words and sentences that have a clip play with the 🌴 Southern voice.
+
+            If it sounds right, run the workflow again with an empty limit to generate everything that's still missing. This PR will update. Native-speaker recordings from the in-app Studio always take priority over these clips.
+          delete-branch: true

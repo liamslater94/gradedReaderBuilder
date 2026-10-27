@@ -1,4 +1,6 @@
 # Graded-Reader-Builder
+
+> 🛵 **New: [Saigon Reader](saigon-reader/)**, an installable daily graded reader for Southern Vietnamese (Saigon dialect): 25 illustrated stories over 5 levels, adaptive difficulty, flashcards and Southern pronunciation tools. It works on iPhone and desktop.
 Graded Reader Builder lets people create professional-quality graded readers from simple text input (story, vocab, characters, etc.). A wealth of high-quality books written by language learners, for language learners can be produced by this tool!
 
 ## Graded Reader Builder Input & Output
