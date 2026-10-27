@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9f43"/>
+      <stop offset="0.5" stop-color="#e2558a"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <!-- nón lá (conical hat) -->
+  <path d="M256 92 L392 236 Q256 262 120 236 Z" fill="#fde68a"/>
+  <path d="M256 92 L392 236 Q256 262 120 236 Z" fill="none" stroke="#b45309" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M256 92 L200 244 M256 92 L312 244 M256 92 L256 250" stroke="#d97706" stroke-width="4" opacity="0.6"/>
+  <!-- open book -->
+  <path d="M96 286 Q176 262 256 300 L256 420 Q176 384 96 404 Z" fill="#ffffff"/>
+  <path d="M416 286 Q336 262 256 300 L256 420 Q336 384 416 404 Z" fill="#fff4e0"/>
+  <path d="M256 300 L256 420" stroke="#e2558a" stroke-width="6"/>
+  <path d="M128 318 Q180 304 228 326 M128 346 Q180 332 228 354 M284 326 Q332 304 384 318 M284 354 Q332 332 384 346" stroke="#f0b48a" stroke-width="8" stroke-linecap="round" fill="none"/>
+</svg>

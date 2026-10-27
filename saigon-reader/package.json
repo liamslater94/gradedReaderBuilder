@@ -1,0 +1,10 @@
+{
+  "name": "saigon-reader",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node tools/check-content.js",
+    "icons": "node tools/make-icons.cjs",
+    "serve": "python3 -m http.server 8000"
+  }
+}
