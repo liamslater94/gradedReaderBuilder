@@ -64,7 +64,19 @@ Commit `audio/` and every learner gets the recordings. Native recordings always 
 
 ### Option B: generate audio with a Southern neural voice
 
-`tools/generate-audio.js` uses [FPT.AI Text-to-Speech](https://fpt.ai), whose `lannhi` voice is documented as a Southern female voice. Get an API key at console.fpt.ai, then:
+`tools/generate-audio.js` uses [FPT.AI Text-to-Speech](https://fpt.ai), whose `lannhi` voice is documented as a Southern female voice. Get an API key at console.fpt.ai.
+
+**From GitHub, with nothing to install:** this is the easiest way.
+
+1. Add the key as a repository secret named `FPT_API_KEY`: **Settings → Secrets and variables → Actions → New repository secret**.
+2. Let workflows open pull requests: **Settings → Actions → General → Workflow permissions →** tick **Allow GitHub Actions to create and approve pull requests**.
+3. Go to **Actions → Generate Southern audio (Saigon Reader) → Run workflow**. Keep the limit at **20** for a first sample.
+4. The workflow opens a pull request with the clips. Play a few `.mp3` files from *Files changed*.
+5. If they sound right, run the workflow again with the limit blank to generate the rest (the same PR updates). Then merge, and the site redeploys with Southern audio.
+
+The workflow only appears in the Actions tab once it's on the default branch (`master`).
+
+**From your laptop:**
 
 ```bash
 npm run audio -- --dry-run          # how many clips and characters (≈ cost)

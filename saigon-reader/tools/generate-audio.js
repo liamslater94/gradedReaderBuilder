@@ -37,13 +37,31 @@ if (!key) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// POST the text, retrying with backoff on rate limits, server errors and network failures.
+async function request(body) {
+  for (let attempt = 1; ; attempt++) {
+    let res, json;
+    try {
+      res = await fetch(endpoint, { method: "POST", headers: { api_key: key, voice, speed, format: "mp3" }, body });
+      json = await res.json().catch(() => ({}));
+    } catch (e) {
+      if (attempt >= 4) throw e;
+      await sleep(2000 * 2 ** attempt);
+      continue;
+    }
+    const link = json.async || (typeof json.message === "string" && json.message.startsWith("http") ? json.message : null);
+    if (res.ok && link) return link;
+    if ((res.status === 429 || res.status >= 500) && attempt < 4) {
+      await sleep(2000 * 2 ** attempt);
+      continue;
+    }
+    throw new Error(`TTS request failed (${res.status}): ${JSON.stringify(json)}`);
+  }
+}
+
 async function synth(text) {
   // FPT requires at least 3 characters; a trailing full stop keeps short words natural.
-  const body = text.length < 3 ? text + "." : text;
-  const res = await fetch(endpoint, { method: "POST", headers: { api_key: key, voice, speed, format: "mp3" }, body });
-  const json = await res.json().catch(() => ({}));
-  const link = json.async || (typeof json.message === "string" && json.message.startsWith("http") ? json.message : null);
-  if (!res.ok || !link) throw new Error(`TTS request failed (${res.status}): ${JSON.stringify(json)}`);
+  const link = await request(text.length < 3 ? text + "." : text);
   // The audio appears at the async link after a few seconds.
   for (let i = 0; i < 30; i++) {
     await sleep(i ? 1500 : 800);
