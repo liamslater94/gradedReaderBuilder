@@ -7,7 +7,7 @@ const INTERVALS = [0, 1, 2, 4, 8, 16, 32, 64]; // days per box
 export function addCard(key, entry, storyId) {
   if (state.cards[key]) return false;
   state.cards[key] = {
-    vi: entry.display || key, en: entry.en, north: entry.north || null, note: entry.note || null,
+    vi: entry.display || key, en: entry.en, north: entry.north || null, note: entry.note || null, pic: entry.pic || null,
     story: storyId, box: 0, due: Date.now(), added: Date.now(),
   };
   save();

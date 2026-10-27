@@ -3,7 +3,9 @@
 //   north – Northern / standard equivalent (marks the entry as Southern usage)
 //   note  – optional usage or pronunciation tip
 
-export const DICTIONARY = {
+import { MORE } from "./dictionary-more.js";
+
+const BASE = {
   // ── Pronouns & people ────────────────────────────────────────────
   "tui": { en: "I, me", north: "tôi", note: "Everyday Southern “I”. Friendly, not rude." },
   "bạn": { en: "friend; you (to a peer)" },
@@ -70,7 +72,6 @@ export const DICTIONARY = {
   "cho": { en: "to give; for; let" },
   "đặt": { en: "to place; to book, order" },
   "đặt tên": { en: "to name, give a name" },
-  "chơi": { en: "to play" },
   "ngồi": { en: "to sit" },
   "ngồi xuống": { en: "to sit down" },
   "thương": { en: "to love, to be fond of", note: "Southerners use “thương” warmly for people and places, where the North might say “yêu”." },
@@ -170,9 +171,7 @@ export const DICTIONARY = {
   "ào ào": { en: "pouring, rushing (sound)" },
   "dễ chịu": { en: "pleasant, comfortable" },
   "tung tóe": { en: "splashing everywhere" },
-  "đầy": { en: "full of" },
   "mắc": { en: "expensive", north: "đắt" },
-  "rẻ": { en: "cheap" },
   "ghê": { en: "really, awfully (Southern exclamation)", note: "“Giỏi ghê!” = so clever!" },
   "vắng hoe": { en: "deserted, empty" },
   "rộng thênh thang": { en: "wide and open" },
@@ -219,10 +218,8 @@ export const DICTIONARY = {
   "còn": { en: "still; remain" },
   "đang": { en: "currently, in the middle of (-ing)" },
   "được": { en: "can; okay; get to; (after time) for" },
-  "chỉ": { en: "only" },
   "của": { en: "of, belonging to" },
   "với": { en: "with" },
-  "trong": { en: "in, inside" },
   "trên": { en: "on, above" },
   "ngoài": { en: "outside" },
   "ngoài đường": { en: "out on the street" },
@@ -231,7 +228,6 @@ export const DICTIONARY = {
   "sau": { en: "after; later" },
   "để": { en: "in order to" },
   "bằng": { en: "with, by means of" },
-  "từng": { en: "each, one by one" },
   "lận": { en: "a whole… (emphasis on amount)", note: "Southern particle: “hai ký lận” = a whole two kilos." },
   "hà": { en: "only (sentence-final, Southern)", north: "thôi" },
   "đó": { en: "that; (sentence-final) you know, see" },
@@ -423,3 +419,6 @@ export const DICTIONARY = {
   "mưa": { en: "rain" },
   "sống lâu trăm tuổi": { en: "live to a hundred (New Year wish)" },
 };
+
+// Base entries win over MORE where both define a word.
+export const DICTIONARY = { ...MORE, ...BASE };
